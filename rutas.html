@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/ico" href="mapa.ico" />
+
+  <title>Selector de rutas</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+  <!-- css -->
+  <link rel="stylesheet" href="assets/css/foundation.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body>
+  <div class="grid-container">
+    <div class="grid-x grid-padding-x scroller">
+      <div class="large-12 cell">
+        <h3><img src="assets/img/mapa.png "> Ruta</h3>
+      </div>
+    </div>
+
+    <div class="grid-x grid-padding-x">
+      <!-- Rutas  -->
+      <div class="large-3 medium-3 cell">
+        <div id="rutas" class="large-4 medium-4" style="float: right !important; height: 550px !important">
+
+          <label for="ruta" class="font-bold">
+            <h5>Origen:</h5>
+          </label>
+          <input type="text" id="origen" name="origen" required="required" placeholder="Origen" size="30"
+            class="minusculas" />
+
+          <div class="todo-list-card card">
+            <div class="card-divider">
+              <h5>Paradas</h5>
+              <br>
+
+              <input id="eliminarParada" type="submit" class="alert button" value="-"
+                style="height: 35px; text-align: center;" onclick="eliminarParada('dataTable')" />
+
+              <input id="agregarParada" type="submit" class="success button" value="+"
+                style="height: 35px; text-align: center;" onclick="agregarParada('dataTable')" />
+            </div>
+
+            <div class="card-section">
+              <div style="overflow: auto !important; height: 160px !important">
+                <input type="text" id="parada" name="parada" placeholder="Parada" class="minusculas" />
+
+                <ul id="paradaUL" class="todo">
+                  <div>
+                    <table id="dataTable" class="table">
+                    </table>
+                  </div>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <label for="ruta">
+            <h5>Destino:</h5>
+          </label>
+          <input type="text" id="destino" name="destino" required="required" placeholder="Destino" size="30"
+            class="minusculas" />
+
+          <br>
+          <input id="buscarRuta" type="submit" class="button" value="Buscar ruta" size="150px"
+            onclick="displayRoute();" />
+        </div>
+      </div>
+
+      <!-- Mapa -->
+      <div class="large-9 medium-9 cell">
+        <div id="map" class="map"></div>
+      </div>
+    </div>
+
+    <!-- Datos de la ruta -->
+    <div class="grid-x grid-padding-x">
+      <!-- Detalle de la ruta -->
+      <div class="large-12 medium-12 cell">
+        <br>
+        <h5>Detalle de la ruta</h5>
+        <div id="directionsPanel" style="overflow: auto !important; height: 250px !important">
+        </div>
+      </div>
+    </div>
+
+    <!-- Nommbre e la ruta -->
+    <div class="grid-x grid-padding-x">
+      <div class="large-12 medium-12 cell">
+        <br>
+        <div class="large-6 medium-6">
+          <label for="ruta">
+            <h5>Nombre de la ruta </h5>
+          </label>
+          <input type="text" id="nombreRuta" name="nombreRuta" placeholder="Nombre de la ruta" size="30" />
+
+          <input id="guardarRuta" type="submit" class="button" value="Guardar ruta" size="150px"
+            onclick="guardarRuta();" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Inicializar mapa
+    var map;
+    var rutaFinal;
+
+    function initMap() {
+      const mty = { lat: 25.6574, lng: -100.3117 };
+
+      map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 8,
+        center: mty,
+      });
+
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer({
+        draggable: true,
+        map,
+        panel: document.getElementById("directionsPanel"),
+      });
+
+      directionsRenderer.addListener("directions_changed", () => {
+        computeTotalDistance(directionsRenderer.getDirections());
+      })
+    }
+  </script>
+
+  <!-- API KEY -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AQUI-VA-LA-LLAVE&callback=initMap&libraries=&v=weekly"
+    async>
+    </script>
+
+  <!-- Rutas JS -->
+  <!-- 
+  <script src="core/rutas.js"></script>
+  -->
+  
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-auth.js"></script>
+
+  <script src="core/db.js"></script>
+
+</body>
+
+</html>
